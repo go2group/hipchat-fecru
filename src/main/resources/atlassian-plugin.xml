@@ -1,0 +1,85 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+        <param name="configure.url">/plugins/servlet/hipchat/config</param>
+    </plugin-info>
+
+    <component-import key="template-renderer"
+                      interface="com.atlassian.templaterenderer.velocity.one.six.VelocityTemplateRenderer"/>
+    <component-import key="application-properties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/>
+    <component-import key="loginUriProvider" interface="com.atlassian.sal.api.auth.LoginUriProvider"/>
+    <component-import key="pluginSettingsFactory"
+                      interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
+	<component-import key="requestFactory" interface="com.atlassian.sal.api.net.RequestFactory"/>
+    <component-import key="executorFactory" interface="com.atlassian.sal.api.executor.ThreadLocalDelegateExecutorFactory"/>
+    <component-import key="applicationLinkService">
+        <interface>com.atlassian.applinks.api.ApplicationLinkService</interface>
+    </component-import>
+    <component name="Configuration Manager" key="configurationManager"
+               class="com.go2group.hipchat.components.ConfigurationManager">
+        <description>Stores the details of the configured HipChat settings</description>
+    </component>
+    <component name="Commit Listener" key="hipchat-commit-listener"
+               class="com.go2group.hipchat.components.FisheyeListener"/>
+    <component name="Review Listener" key="hipchat-review-listener"
+               class="com.go2group.hipchat.components.CrucibleListener"/>
+    <component name="HipChat Proxy Client" key="proxy-client"
+               class="com.go2group.hipchat.components.HipChatProxyClient"/>
+
+    <web-resource name="Space config" key="space-config">
+        <resource name="repo.js" type="download" location="js/repo.js"/>
+    </web-resource>
+
+    <servlet name="HipChat Auth Token Admin Servlet" i18n-name-key="hipchat-auth-token-admin-servlet.name"
+             key="hipchat-auth-token-admin-servlet"
+             class="com.go2group.hipchat.servlet.HipChatAuthTokenAdminServlet">
+        <description key="hip-chat-auth-token-admin-servlet.description">The HipChat Auth Token Admin Servlet
+        </description>
+        <url-pattern>/hipchat/config</url-pattern>
+    </servlet>
+
+    <web-item name="HipChat Configuration" i18n-name-key="hipchat.config" key="hipchat-config"
+              section="system.admin/security" weight="100">
+        <description key="hipchat.config">HipChat Configuration</description>
+        <label>Go2Group HipChat Config</label>
+        <link linkId="restapi-browser-link">/plugins/servlet/hipchat/config</link>
+    </web-item>
+
+    <servlet name="HipChat Repo Config Servlet" i18n-name-key="hipchat-repo-config-servlet.name"
+             key="hipchat-repo-config-servlet"
+             class="com.go2group.hipchat.servlet.HipChatRepositoryConfigServlet">
+        <description key="hipchat-repo-config-servlet.description">The HipChat Repo Config Servlet
+        </description>
+        <url-pattern>/hipchat/repo-config</url-pattern>
+    </servlet>
+    
+    <servlet name="HipChat Project Config Servlet" i18n-name-key="hipchat-project-config-servlet.name"
+             key="hipchat-project-config-servlet"
+             class="com.go2group.hipchat.servlet.HipChatProjectConfigServlet">
+        <description key="hipchat-project-config-servlet.description">The HipChat Project Config Servlet
+        </description>
+        <url-pattern>/hipchat/project-config</url-pattern>
+    </servlet>
+    
+    <servlet name="Announcement Servlet" i18n-name-key="announcement-servlet.name"
+             key="announcement-servlet"
+             class="com.go2group.hipchat.servlet.AnnouncementServlet">
+        <description key="announcement-servlet.description">Post Announcements to Hipchat rooms
+        </description>
+        <url-pattern>/hipchat/announcement</url-pattern>
+    </servlet>
+
+    <web-item key="hipchat-notification-link" section="system.admin.repo.operation">
+        <link>/plugins/servlet/hipchat/repo-config?name=${helper.repository.path}</link>
+        <label>HipChat Notification</label>
+    </web-item>
+    
+    <web-item key="hipchat-project-notification-link" section="system.admin.project.operation">
+        <link>/plugins/servlet/hipchat/project-config?key=${helper.project.key}</link>
+        <label>HipChat Notification</label>
+    </web-item>
+
+</atlassian-plugin>

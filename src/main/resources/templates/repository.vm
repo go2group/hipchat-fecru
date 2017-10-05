@@ -1,0 +1,47 @@
+<html>
+<head>
+    <title>HipChat Repository Configuration</title>
+    <meta name="decorator" content="atl.admin"/>
+    <style>
+        .hc-admin {
+            padding: 0 20px;
+        }
+    </style>
+    <script type="text/javascript">
+        window.hcRoomIds = "$roomsToNotifyStrHtml";
+        window.hcRooms = $roomsJsonHtml;
+    </script>
+    <script id="rooms-tmpl" type="text/tmpl">
+        <% _.each(rooms, function(room){ %>
+        <div class="checkbox">
+            <input class="checkbox" type="checkbox" <%- room.checked %> name="roomId" value="<%- room.room_id %>">
+            <label for="<%- room.room_id %>"><%- room.name %></label>
+        </div>
+        <% }) %>
+    </script>
+</head>
+<body>
+<div class="hc-admin">
+    <form action="" method="post" class="aui">
+        <h2>HipChat Configuration</h2>
+
+        <p>
+            Fisheye can notify one or more HipChat rooms when a commit is made to <b>$repo.getName()</b>. Specify the
+            room(s) you would like notified:
+        </p>
+        <input type="hidden" name="repoName" value="$repo.getName()"/>
+        <fieldset class="group" id="rooms">
+            <legend><span>Rooms</span></legend>
+            <div id="room-list"></div>
+        </fieldset>
+
+        <div class="buttons-container">
+            <div class="buttons">
+                <input class="button submit" type="submit" value="Save"/>
+            </div>
+        </div>
+    </form>
+    $webResourceManager.requireResource("com.go2group.hipchat-fecru:space-config")
+</div>
+</body>
+</html>

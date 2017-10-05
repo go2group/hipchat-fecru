@@ -1,0 +1,48 @@
+<html>
+<head>
+    <title>HipChat Configuration</title>
+    <meta name="decorator" content="atl.admin"/>
+    <style>
+        .hc-admin {
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="hc-admin">
+    <form action="config" method="post" class="aui">
+        <h2>HipChat API Auth Token Configuration</h2>
+
+        <p>
+            FishEye accesses HipChat through the HipChat API. This API is protected by an API token. To request
+            an
+            API token, go to <a href="https://hipchat.com/admin/api" target="_blank">HipChat's API Auth Token
+            page</a> then
+            generate an <b>Admin</b> token. Copy and paste that token to the field below.
+        </p>
+ 		#if($error)
+            <div class="aui-message error"><span class="aui-icon icon-error"></span>
+            	<p>Oops! There was error retrieving the rooms with the token you supplied. Are you sure it is a valid <b>admin</b> token?</p>
+           	</div>
+        #end
+        <div class="field-group">
+            <label for="serverUrl">Hipchat Server URL<span class="aui-icon icon-required"></span><span class="content"> required</span></label>
+            <input id="serverUrl" class="text" type="text" name="serverUrl" value="$!serverUrl"/>
+        </div>
+        <div class="field-group">
+            <label for="hipChatAuthToken">Admin Token<span class="aui-icon icon-required"></span><span class="content"> required</span></label>
+            <input id="hipChatAuthToken" class="text" type="password" name="hipChatAuthToken" #if (!$error) value="$hipChatAuthToken" #end/>
+        </div>
+
+        <div class="buttons-container">
+            <div class="buttons">
+                <input class="button submit" type="submit" value="Save"/>
+                #if($hipChatAuthToken)
+	            	<a href="$baseUrl/plugins/servlet/hipchat/announcement">Announcements</a>
+	            #end
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

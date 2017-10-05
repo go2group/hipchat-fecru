@@ -1,0 +1,95 @@
+<html>
+<head>
+    <title>HipChat Announcements</title>
+    <meta name="decorator" content="atl.admin"/>
+    <style>
+        .hc-admin {
+            padding: 0 20px;
+        }
+    </style>
+    <script type="text/javascript">
+        window.hcRoomIds = "";
+        window.hcRooms = $roomsJsonHtml;
+    </script>
+    <script id="rooms-tmpl" type="text/tmpl">
+        <% _.each(rooms, function(room){ %>
+        <div class="checkbox">
+            <input class="checkbox" type="checkbox" <%- room.checked %> name="roomId" value="<%- room.room_id %>">
+            <label for="<%- room.room_id %>"><%- room.name %></label>
+        </div>
+        <% }) %>
+    </script>
+</head>
+<body>
+<div class="hc-admin">
+    <form action="" method="post" class="aui">
+        <h2>HipChat Announcements</h2>
+
+        <p>
+            Fisheye can post announcements to selected Hipchat rooms.
+        </p>
+        <fieldset class="group" id="messages">
+	        <div>
+		    	<textarea rows="6" cols="100" id="message" name="message"></textarea> 
+		    </div>
+	    </fieldset>
+	    <fieldset class="group" id="announcement-color">
+			<div>
+		     	<input type="radio" name="color" value="yellow"> Yellow
+		       	<input type="radio" name="color" value="red"> Red
+		       	<input type="radio" name="color" value="green" checked> Green
+		       	<input type="radio" name="color" value="purple"> Purple
+		       	<input type="radio" name="color" value="gray"> Gray
+		    </div>
+		</fieldset>
+        <fieldset class="group" id="rooms">
+            <legend><span>Rooms</span></legend>
+            <div class="field-group">
+            	<select name="roomOption" id="roomOption">
+            		<option value="all" selected>All Rooms</option>
+            		<option value="subscribed">Rooms subscribed to atleast one notification</option>
+            		<option value="specifc">Selected Rooms</option>
+            	</select>
+            </div>
+            <div class="field-group" id="buttonGroup">
+            	<input type="button" id="selectAll" name="selectAll" value="Select All">
+            	<input type="button" id="selectNone" name="selectNone" value="Select None">
+            </div>
+            <div id="room-list"></div>
+        </fieldset>
+
+        <div class="buttons-container">
+            <div class="buttons">
+                <input class="button submit" type="submit" value="Post"/>
+                <a href="$baseUrl/plugins/servlet/hipchat/config">Cancel</a>
+            </div>
+        </div>
+    </form>
+    $webResourceManager.requireResource("com.go2group.hipchat-fecru:space-config")
+</div>
+
+<script type="text/javascript">
+	AJS.$("#buttonGroup").hide();
+	AJS.$("#room-list").hide();
+	
+	AJS.$("#selectAll").click(function () {
+		AJS.$("#room-list").find(':checkbox').prop('checked', true);
+	});
+	
+	AJS.$("#selectNone").click(function () {
+		AJS.$("#room-list").find(':checkbox').removeAttr('checked');
+	});
+	
+	AJS.$("#roomOption").change(function () {
+		if (AJS.$(this).val() == "specifc"){
+			AJS.$("#buttonGroup").show();
+			AJS.$("#room-list").show();
+		} else {
+			AJS.$("#buttonGroup").hide();
+			AJS.$("#room-list").hide();
+		}
+	});
+</script>
+
+</body>
+</html>
